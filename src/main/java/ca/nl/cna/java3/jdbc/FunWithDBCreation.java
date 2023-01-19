@@ -20,15 +20,21 @@ public class FunWithDBCreation {
 
     public static void main(String[] args) {
 
-        try{
-            Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        try {
+            //Check DBConfiguration Class if you have any issues with this connection
+            Connection connection = DriverManager.getConnection(DBConfiguration.DB_URL, DBConfiguration.DB_USER, DBConfiguration.DB_PASSWORD);
             Statement statement = connection.createStatement();
+
+            //TODO Add in a drop table command
             String sql = "CREATE DATABASE STUDENTS";
             statement.execute(sql);
 
             System.out.println("It worked!?");
 
-        } catch (SQLException sqlException){
+            statement.close();
+            connection.close();
+        }
+        catch (SQLException sqlException){
             sqlException.printStackTrace();;
         }
 

@@ -7,6 +7,7 @@ import java.sql.*;
  *
  * Use the following SQL to configure the database:
  *
+ * Note: you can use "drop table Employees" to clean the db
  * <pre>
  * create table Employees ( Id int not null, age int not null, first varchar (255), last varchar (255) );
  * INSERT INTO Employees VALUES (100, 40, 'Albert', 'Norman');
@@ -21,22 +22,33 @@ import java.sql.*;
  */
 public class FunWithDBSelects {
 
-    //Database parameters - "jdbc:mariadb" lets JDBC know to look for the Maria DB driver
-    //TODO Make sure you port and password are set to you own values
-    private static final String DB_URL = "jdbc:mariadb://localhost:3308/employeedb";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "DXmE4JsCpvmZTQ";
-
     public static void main(String[] args) {
 
         try{
-            Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            //Check DBConfiguration Class if you have any issues with this connection
+            Connection connection = DriverManager.getConnection(DBConfiguration.DB_URL + DBConfiguration.DB_EMPLOYEE_DB_NAME, DBConfiguration.DB_USER, DBConfiguration.DB_PASSWORD);
+            printEmployeesTable(connection);
+        }
+        catch (SQLException sqlException){
+            sqlException.printStackTrace();;
+        }
+
+    }
+
+    /**
+     * Print out the employees table. This method is abstracted for reuse in other examples
+     * @param connection open db connection
+     */
+    public static void printEmployeesTable(Connection connection){
+
+        try{
             Statement statement = connection.createStatement();
             String sql = "SELECT id, first, last, age FROM Employees";
             ResultSet resultSet = statement.executeQuery(sql);
 
             System.out.println("Employee data:");
             System.out.println("ID \t\tAGE \t\tFirst Name\t\t Last Name");
+
             while(resultSet.next()){
                 // Retrieve by column name
                 System.out.print(resultSet.getInt("id") + "\t\t");
@@ -44,11 +56,12 @@ public class FunWithDBSelects {
                 System.out.print(resultSet.getString("first") + "\t\t\t");
                 System.out.println(resultSet.getString("last") + "\t\t");
             }
-
-        } catch (SQLException sqlException){
+            statement.close();
+        }
+        catch (SQLException sqlException){
             sqlException.printStackTrace();;
         }
-
     }
+
 
 }
