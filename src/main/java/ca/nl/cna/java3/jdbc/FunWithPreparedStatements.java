@@ -19,13 +19,15 @@ public class FunWithPreparedStatements {
 
             String sql = "Update Employees SET age = ? WHERE id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1,33);
+            preparedStatement.setInt(1,36);
             preparedStatement.setInt(2,101);
             preparedStatement.executeUpdate();
 
             //Print out database after
             FunWithDBSelects.printEmployeesTable(connection);
 
+            preparedStatement.close();
+            connection.close();
 
         } catch (SQLException e) {
             e.printStackTrace();

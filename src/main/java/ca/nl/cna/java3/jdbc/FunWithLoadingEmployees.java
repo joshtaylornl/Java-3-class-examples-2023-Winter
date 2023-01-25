@@ -43,14 +43,15 @@ public class FunWithLoadingEmployees {
             String sql = "SELECT id, first, last, age FROM Employees";
             ResultSet resultSet = statement.executeQuery(sql);
 
-            //TODO we need to abstract the table id labels into DB Config
+            //Create the employee objects from the result set and add them to the list
             while(resultSet.next()){
-                Employee employee = new Employee(
-                        resultSet.getString("first"),
-                        resultSet.getString("last"),
-                        resultSet.getInt("age"),
-                        resultSet.getInt("id"));
-                employeeLinkedList.add(employee);
+                employeeLinkedList.add(
+                        new Employee(
+                            resultSet.getString(DBConfiguration.DB_EMPLOYEE_COL_FIRST_NAME),
+                            resultSet.getString(DBConfiguration.DB_EMPLOYEE_COL_LAST_NAME),
+                            resultSet.getInt(DBConfiguration.DB_EMPLOYEE_COL_AGE),
+                            resultSet.getInt(DBConfiguration.DB_EMPLOYEE_COL_ID))
+                );
             }
             statement.close();
         }
